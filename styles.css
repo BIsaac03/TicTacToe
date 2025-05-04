@@ -1,0 +1,17 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+
+#board{
+    display: grid;
+    grid-template: 1fr 1fr 1fr / 1fr 1fr 1fr;
+    gap: 25px;
+    padding: 100px;
+}
+
+.square{
+    height: 100px;
+    width: 100px;
+    background-color: aquamarine;
+}
