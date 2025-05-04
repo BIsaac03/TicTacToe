@@ -1,5 +1,5 @@
 const board = (function(){
-    let layout = [];
+    const layout = [];
     const width = prompt("What width?")
 
     const playingField = document.getElementById("board")
@@ -38,7 +38,16 @@ function playGame(player1, player2, board){
                 player2.isMyTurn = !player2.isMyTurn;
 
                 if (board.gameState != "Ongoing"){
-                    console.log("GAME OVER");
+                    if (board.gameState.result == "Tie"){
+                        console.log("No more valid moves. Tie game!");
+                    }
+                    const winningLine = [];
+                    for (let i = 0; i < board.width; i++){
+                        winningLine.push(document.querySelector(`.${CSS.escape(board.gameState.winningLine[i])}`));
+                    }
+                    for(let i = 0; i < winningLine.length; i++){
+                        winningLine[i].style.fontWeight = 'bold';
+                    }
                 }
             }
         });
@@ -62,18 +71,68 @@ class Player{
             return 1;
         }
         board.layout[move].status = this.symbol;
-        let square = document.querySelector(`.${CSS.escape(move)}`);;
+        let square = document.querySelector(`.${CSS.escape(move)}`);
         square.textContent = this.symbol;
         return this.checkWin(move);
     }
 
     checkWin(move){
+        let columnCheck = board.layout[move].column;
+        let rowCheck = board.layout[move].row;
+        let winningLine = [];
+
+        for (let i = 0; i < board.width; i++){
+            if (board.layout[i*board.width + columnCheck].status != this.symbol){
+                winningLine.length = 0;
+                break;
+            }
+            winningLine.push(i*board.width + columnCheck);
+            if (i == board.width - 1){
+                return {result: "Win", winner: this.name, winningLine: winningLine};
+            }
+        }
+
+        for (let i = 0; i < board.width; i++){
+            if (board.layout[i + rowCheck*board.width].status != this.symbol){
+                winningLine.length = 0;
+                break;
+            }
+            winningLine.push(i + rowCheck*board.width);
+            if (i == board.width - 1){
+                return {result: "Win", winner: this.name, winningLine: winningLine};
+            }
+        }
+
+        if (columnCheck == rowCheck){
+            for (let i = 0; i < board.width; i++){
+                if (board.layout[i*board.width + i].status != this.symbol){
+                    winningLine.length = 0;
+                    break;
+                }
+                winningLine.push(i*board.width + i);
+                if (i == board.width - 1){
+                    return {result: "Win", winner: this.name, winningLine: winningLine};
+                }
+            }
+        }
+
+        if (columnCheck == board.width - 1 - rowCheck){
+            for (let i = 0; i < board.width; i++){
+                if (board.layout[board.width*(board.width - i) - board.width + i].status != this.symbol){
+                    winningLine.length = 0;
+                    break;
+                }
+                winningLine.push(board.width*(board.width - i) - board.width + i);
+                if (i == board.width - 1){
+                    return {result: "Win", winner: this.name, winningLine: winningLine};
+                }
+            }
+        }
+
         const blankSquare = board.layout.find((square) => square.status == "Empty")
         if (blankSquare == undefined) {
-            console.log("No more valid moves. Tie game!")
-            return "Tie";
+            return {result: "Tie"};
         }
-        console.log(blankSquare);
         return "Ongoing";
     }
 }
