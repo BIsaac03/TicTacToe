@@ -5,6 +5,7 @@
 
 body{
     display: grid;
+    grid-template-rows: 1fr / auto / auto;
 }
 
 #board{
@@ -13,16 +14,26 @@ body{
     height: fit-content;
     width: fit-content;
     gap: 25px;
-    padding: 100px;
+    padding: 50px;
     justify-self: center;
 }
 
 .square{
     height: 100px;
     width: 100px;
-    background-color: aquamarine;
+    background-color: #FFFDD0;
     font-size: 64px;
     display: grid;
     align-items: center;
     justify-items: center;
+}
+
+button{
+    margin-top: 30px;
+    width: 300px;
+    height: 100px;
+    background-color: #FFFDD0;
+    justify-self: center;
+    border-radius: 15px;   
+    font-size: 32px;
 }
