@@ -143,9 +143,12 @@ const board = (function(){
             square.classList.add("square", i)
             playingField.appendChild(square);
             square.addEventListener("click", function(){
-                markSquare(i);});
+                if (gameState == "Ongoing"){
+                    markSquare(i);
+                }
+            });
         }
-        
+
         gameState = "Ongoing"
     }
 
