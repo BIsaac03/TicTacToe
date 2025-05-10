@@ -6,8 +6,8 @@ class Player{
     }
 }
 
-const player1 = new Player('Sarah', 'X', true);
-const player2 = new Player('Nadezhda', 'O', false);
+const player1 = new Player('Player1', 'X', true);
+const player2 = new Player('Player2', 'O', false);
 
 const board = (function(){
     const layout = [];
@@ -19,8 +19,15 @@ const board = (function(){
             let square = document.querySelector(`.${CSS.escape(i)}`);
             square.textContent = "";
             square.style.fontWeight = '400';
+            square.style.fontSize = '64px';
         }
         gameState = "Ongoing";
+
+        const winningMessage = document.getElementById("winningMessage");
+        winningMessage.textContent = "";
+        const victoryBanner = document.getElementsByClassName("victory");
+        victoryBanner[0].textContent = "";
+        victoryBanner[1].textContent = "";
     }
 
     const markSquare = (square) => {
@@ -57,8 +64,7 @@ const board = (function(){
             }
             winningLine.push(i*width + columnCheck);
             if (i == width - 1){
-                console.log("WON")
-                return {result: "Win", winner: activePlayer.name, winningLine: winningLine};
+                return {result: "Win", winner: activePlayer, winningLine: winningLine};
             }
         }
 
@@ -70,7 +76,7 @@ const board = (function(){
             }
             winningLine.push(i + rowCheck*width);
             if (i == width - 1){
-                return {result: "Win", winner: activePlayer.name, winningLine: winningLine};
+                return {result: "Win", winner: activePlayer, winningLine: winningLine};
             }
         }
 
@@ -83,7 +89,7 @@ const board = (function(){
                 }
                 winningLine.push(i*width + i);
                 if (i == width - 1){
-                    return {result: "Win", winner: activePlayer.name, winningLine: winningLine};
+                    return {result: "Win", winner: activePlayer, winningLine: winningLine};
                 }
             }
         }
@@ -95,7 +101,7 @@ const board = (function(){
                 }
                 winningLine.push(width*(width - i) - width + i);
                 if (i == width - 1){
-                    return {result: "Win", winner: activePlayer.name, winningLine: winningLine};
+                    return {result: "Win", winner: activePlayer, winningLine: winningLine};
                 }
             }
         }
@@ -116,16 +122,32 @@ const board = (function(){
             if (gameState.result == "Tie"){
                 console.log("No more valid moves. Tie game!");
             }
-            for (let i = 0; i < Math.sqrt(layout.length); i++){
-                winningLine.push(document.querySelector(`.${CSS.escape(gameState.winningLine[i])}`));
-            }
-            for(let i = 0; i < winningLine.length; i++){
-                winningLine[i].style.fontWeight = 'bold';
-            } 
+
+            else{
+                for (let i = 0; i < Math.sqrt(layout.length); i++){
+                    winningLine.push(document.querySelector(`.${CSS.escape(gameState.winningLine[i])}`));
+                }
+                for(let i = 0; i < winningLine.length; i++){
+                    winningLine[i].style.fontWeight = 'bold';
+                    winningLine[i].style.fontSize = '80px';
+                }
+                
+                const winningMessage = document.getElementById("winningMessage");
+                winningMessage.textContent = (gameState.winner.name + " wins!");
+                if (gameState.winner == player1){
+                    const winnerBanner = document.getElementById("victory1");
+                    winnerBanner.textContent = "WINNER!"
+                }
+                else{
+                    const winnerBanner = document.getElementById("victory2");
+                    winnerBanner.textContent = "WINNER!"
+                }
+            }  
         }
     }
 
     const createBoard = (width) => {
+        clearBoard();
         layout.length = 0;
         const playingField = document.getElementById("board")
         playingField.innerHTML = "";
@@ -148,8 +170,6 @@ const board = (function(){
                 }
             });
         }
-
-        gameState = "Ongoing"
     }
 
     return {clearBoard, createBoard};
