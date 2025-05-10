@@ -6,28 +6,37 @@ class Player{
     }
 }
 
-const player1 = new Player('Player1', 'X', true);
-const player2 = new Player('Player2', 'O', false);
+const player1 = new Player('Player 1', 'X', true);
+const player2 = new Player('Player 2', 'O', false);
 
 const board = (function(){
     const layout = [];
     let gameState = "Ongoing";
 
-    const clearBoard = () => {
-        for (let i = 0; i < layout.length; i++){
-            layout[i].status = "Empty"
-            let square = document.querySelector(`.${CSS.escape(i)}`);
-            square.textContent = "";
-            square.style.fontWeight = '400';
-            square.style.fontSize = '64px';
-        }
-        gameState = "Ongoing";
+    const createBoard = (width) => {
+        clearBoard();
+        layout.length = 0;
+        const playingField = document.getElementById("board")
+        playingField.innerHTML = "";
 
-        const winningMessage = document.getElementById("winningMessage");
-        winningMessage.textContent = "";
-        const victoryBanner = document.getElementsByClassName("victory");
-        victoryBanner[0].textContent = "";
-        victoryBanner[1].textContent = "";
+        width = prompt("How many squares wide should the game be?")
+        let gridTemplate = '1fr '.repeat(width) + "/" + '1fr '.repeat(width[0]);
+        playingField.style.gridTemplate = gridTemplate;
+        for (let i = 0; i < width; i++){
+            for (let j = 0; j < width; j++){
+                layout.push({row: i, column: j, status: "Empty"});
+            }
+        }
+        for(let i = 0; i < width*width; i++){
+            const square = document.createElement("p")
+            square.classList.add("square", i)
+            playingField.appendChild(square);
+            square.addEventListener("click", function(){
+                if (gameState == "Ongoing"){
+                    markSquare(i);
+                }
+            });
+        }
     }
 
     const markSquare = (square) => {
@@ -146,36 +155,27 @@ const board = (function(){
         }
     }
 
-    const createBoard = (width) => {
-        clearBoard();
-        layout.length = 0;
-        const playingField = document.getElementById("board")
-        playingField.innerHTML = "";
+    const clearBoard = () => {
+        for (let i = 0; i < layout.length; i++){
+            layout[i].status = "Empty"
+            let square = document.querySelector(`.${CSS.escape(i)}`);
+            square.textContent = "";
+            square.style.fontWeight = '400';
+            square.style.fontSize = '64px';
+        }
+        gameState = "Ongoing";
 
-        width = prompt("What width?")
-        let gridTemplate = '1fr '.repeat(width) + "/" + '1fr '.repeat(width[0]);
-        playingField.style.gridTemplate = gridTemplate;
-        for (let i = 0; i < width; i++){
-            for (let j = 0; j < width; j++){
-                layout.push({row: i, column: j, status: "Empty"});
-            }
-        }
-        for(let i = 0; i < width*width; i++){
-            const square = document.createElement("p")
-            square.classList.add("square", i)
-            playingField.appendChild(square);
-            square.addEventListener("click", function(){
-                if (gameState == "Ongoing"){
-                    markSquare(i);
-                }
-            });
-        }
+        const winningMessage = document.getElementById("winningMessage");
+        winningMessage.textContent = "";
+        const victoryBanner = document.getElementsByClassName("victory");
+        victoryBanner[0].textContent = "";
+        victoryBanner[1].textContent = "";
     }
 
     return {clearBoard, createBoard};
 })();
 
-board.createBoard(3)
+board.createBoard(3);
 
 const clearButton = document.getElementById("clear");
 clearButton.addEventListener("click", () => {board.clearBoard()}); 
