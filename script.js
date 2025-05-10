@@ -162,3 +162,15 @@ clearButton.addEventListener("click", () => {board.clearBoard()});
 
 const resizeButton = document.getElementById("resize");
 resizeButton.addEventListener("click", () => {board.createBoard()});
+
+const player1Name = document.getElementById("name1");
+player1Name.addEventListener("change", () => {player1.name = player1Name.value});
+
+const player1Symbol = document.getElementById("symbol1");
+player1Symbol.addEventListener("change", () => {player1.symbol = player1Symbol.value});
+
+const player2Name = document.getElementById("name2");
+player2Name.addEventListener("change", () => {player2.name = player2Name.value});
+
+const player2Symbol = document.getElementById("symbol2");
+player2Symbol.addEventListener("change", () => {player2.symbol = player2Symbol.value});
