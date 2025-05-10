@@ -117,10 +117,11 @@ const board = (function(){
 
     const displayResults = (square, activePlayer) => {
         gameState =  checkWin(square, activePlayer);
+        const winningMessage = document.getElementById("winningMessage");
         const winningLine = [];
         if (gameState != "Ongoing"){
             if (gameState.result == "Tie"){
-                console.log("No more valid moves. Tie game!");
+                winningMessage.textContent = ("No more valid moves. Tie game!");
             }
 
             else{
@@ -132,7 +133,6 @@ const board = (function(){
                     winningLine[i].style.fontSize = '80px';
                 }
                 
-                const winningMessage = document.getElementById("winningMessage");
                 winningMessage.textContent = (gameState.winner.name + " wins!");
                 if (gameState.winner == player1){
                     const winnerBanner = document.getElementById("victory1");
